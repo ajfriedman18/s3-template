@@ -177,17 +177,7 @@
           ]
         }
       }
-    },
-    "BucketArchiveDataProd" : {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "LoggingConfiguration": {
-          "DestinationBucketName": {"Ref": "BucketLogs"},
-          "LogFilePrefix": "s3-logs/archive-data-prod/"
-        }
-      }
     }
-
   }
 }
 
