@@ -186,7 +186,31 @@
           "LogFilePrefix": "s3-logs/archive-data-prod/"
         }
       }
-    }
+    },
+    "BucketPolicyArchiveDataProd": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {"Ref": "BucketDataProd"},
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Id": "PutObjPolicy",
+          "Statement": [
+            {
+              "Sid": "DenyIncorrectEncryptionHeader",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref": "BucketDataProd"}, "/*"]]},
+              "Condition": {
+                "StringNotEquals": {
+                    "s3:x-amz-server-side-encryption": "AES256"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
 
   }
 }
