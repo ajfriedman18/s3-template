@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "CI/CD Pipeline for VPC Configuration",
+  "Description": "Creates S3 buckets",
   "Resources": {
     "BucketLogs": {
       "Type": "AWS::S3::Bucket",
@@ -139,51 +139,6 @@
         "LoggingConfiguration": {
           "DestinationBucketName": {"Ref": "BucketLogs"},
           "LogFilePrefix": "s3-logs/data-prod/"
-        }
-      }
-    },
-    "BucketPolicyDataProd": {
-      "Type": "AWS::S3::BucketPolicy",
-      "Properties": {
-        "Bucket": {"Ref": "BucketDataProd"},
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Id": "PutObjPolicy",
-          "Statement": [
-            {
-              "Sid": "DenyIncorrectEncryptionHeader",
-              "Effect": "Deny",
-              "Principal": "*",
-              "Action": "s3:PutObject",
-              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref": "BucketDataProd"}, "/*"]]},
-              "Condition": {
-                "StringNotEquals": {
-                    "s3:x-amz-server-side-encryption": "AES256"
-                }
-              }
-            },
-            {
-              "Sid": "DenyUnencryptedObjectUploads",
-              "Effect": "Deny",
-              "Principal": "*",
-              "Action": "s3:PutObject",
-              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref": "BucketDataProd"}, "/*"]]},
-              "Condition": {
-                "Null": {
-                    "s3:x-amz-server-side-encryption": "true"
-                }
-              }
-            }
-          ]
-        }
-      }
-    },
-    "BucketArchiveDataProd" : {
-      "Type": "AWS::S3::Bucket",
-      "Properties": {
-        "LoggingConfiguration": {
-          "DestinationBucketName": {"Ref": "BucketLogs"},
-          "LogFilePrefix": "s3-logs/archive-data-prod/"
         }
       }
     },
