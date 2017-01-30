@@ -1,0 +1,10 @@
+version: 0.1
+
+phases:
+  build:
+    commands:
+      - cfn_nag --input-json-path ./s3.template
+artifacts:
+  files:
+    - ./s3.template
+  discard-paths: yes
