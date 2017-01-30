@@ -187,7 +187,7 @@
         }
       }
     },
-    "BucketPolicyArchiveDataProd": {
+    "BucketPolicyDataProd": {
       "Type": "AWS::S3::BucketPolicy",
       "Properties": {
         "Bucket": {"Ref": "BucketDataProd"},
@@ -197,7 +197,7 @@
           "Statement": [
             {
               "Sid": "DenyIncorrectEncryptionHeader",
-              "Effect": "Allow",
+              "Effect": "Deny",
               "Principal": "*",
               "Action": "s3:PutObject",
               "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref": "BucketDataProd"}, "/*"]]},
@@ -206,12 +206,23 @@
                     "s3:x-amz-server-side-encryption": "AES256"
                 }
               }
+            },
+            {
+              "Sid": "DenyUnencryptedObjectUploads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": { "Fn::Join" : ["", ["arn:aws:s3:::", {"Ref": "BucketDataProd"}, "/*"]]},
+              "Condition": {
+                "Null": {
+                    "s3:x-amz-server-side-encryption": "true"
+                }
+              }
             }
           ]
         }
       }
-    },
-
+    }
   }
 }
 
